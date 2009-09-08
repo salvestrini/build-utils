@@ -1,6 +1,3 @@
-# ===========================================================================
-#        http://www.nongnu.org/autoconf-archive/ax_split_version.html
-# ===========================================================================
 #
 # SYNOPSIS
 #
@@ -18,7 +15,6 @@
 #
 #   Copyright (c) 2009 Francesco Salvestrini <salvestrini@users.sourceforge.net>
 #   Copyright (c) 2009 Alessandro Massignan <ff0000.it@gmail.com>
-#   Copyright (c) 2008 Tom Howard <tomhoward@users.sf.net>
 #
 #   Copying and distribution of this file, with or without modification, are
 #   permitted in any medium without royalty provided the copyright notice
