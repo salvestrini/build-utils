@@ -57,7 +57,7 @@ if test "$WGET" = "" ; then
     echo "$me: Missing wget executable ..."
     exit 1
 fi
-if test "$WGET" = "@WGET@" ; then
+if test "$WGET" = "@""WGET""@" ; then
     echo "$me: Missing wget autoconf substitution ..."
     exit 1
 fi
