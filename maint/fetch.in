@@ -24,6 +24,7 @@ me="fetch"
 version="0.1"
 
 WGET=@WGET@
+WGET_FLAGS="--timestamping --no-verbose -q -O"
 
 case $1 in
     -h|--help)
@@ -74,7 +75,7 @@ fi
 
 echo "$me: $URL -> $FILE"
 rm -f $FILE
-$WGET --no-verbose -q -O $FILE -- $URL || {
+$WGET $WGET_FLAGS $FILE -- $URL || {
     echo "$me: Cannot fetch $URL"
     rm -f $FILE
     exit 1
