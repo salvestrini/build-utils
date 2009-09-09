@@ -29,7 +29,7 @@ AC_DEFUN([AX_PACKAGE_VERSION_CHECK],[
         AS_IF([test ! -z "`echo $2 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`"],[
             AC_MSG_RESULT([success])
             $6
-            ],[
+        ],[
             AC_MSG_RESULT([fail])
             $7
         ])
@@ -40,7 +40,7 @@ AC_DEFUN([AX_PACKAGE_VERSION_CHECK],[
         AS_IF([test ! -z "`echo $3 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`"],[
             AC_MSG_RESULT([success])
             $6
-            ],[
+        ],[
             AC_MSG_RESULT([fail])
             $7
         ])
@@ -51,7 +51,7 @@ AC_DEFUN([AX_PACKAGE_VERSION_CHECK],[
         AS_IF([test ! -z "`echo $4 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`"],[
             AC_MSG_RESULT([success])
             $6
-            ],[
+        ],[
             AC_MSG_RESULT([fail])
             $7
         ])
@@ -62,7 +62,7 @@ AC_DEFUN([AX_PACKAGE_VERSION_CHECK],[
         AS_IF([test ! -z "`echo $5 | sed -n '/.*/p;'`"],[
             AC_MSG_RESULT([success])
             $6
-            ],[
+        ],[
             AC_MSG_RESULT([fail])
             $7
         ])
