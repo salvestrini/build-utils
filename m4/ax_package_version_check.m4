@@ -21,59 +21,46 @@
 #   and this notice are preserved.
 
 AC_DEFUN([AX_PACKAGE_VERSION_CHECK],[
-    COUNT=$1
-    MAJOR=$2
-    MINOR=$3
-    MICRO=$4
-    EXTRA=$5
+    AC_REQUIRE([AC_PROG_SED])
+    AS_IF([test -z $1],[$1=4])
 
-    AS_IF([test -z $COUNT],[COUNT=4])
-
-    AS_IF([test $COUNT -gt 0 && test ! -z $MAJOR],[
-        AC_MSG_CHECKING([version major=$MAJOR])
-        RESULT=`expr match $MAJOR '[[0-9]][[0-9A-Za-z]]*'`
-        AS_IF([test $RESULT -gt 0],[
+    AS_IF([test $1 -ge 1 && test ! -z $2],[
+        AC_MSG_CHECKING([version major=$2])
+        AS_IF([test ! -z `echo $2 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`],[
             AC_MSG_RESULT([success])
             $6],[
             AC_MSG_RESULT([fail])
             $7
         ])
-        COUNT=`expr $COUNT - 1`
     ])
 
-    AS_IF([test $COUNT -gt 0 && test ! -z $MINOR],[
-        AC_MSG_CHECKING([version minor=$MINOR])
-        RESULT=`expr match $MINOR '[[0-9]][[0-9A-Za-z]]*'`
-        AS_IF([test $RESULT -gt 0],[
+    AS_IF([test $1 -ge 2 && test ! -z $3],[
+        AC_MSG_CHECKING([version minor=$3])
+        AS_IF([test ! -z `echo $3 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`],[
             AC_MSG_RESULT([success])
             $6],[
             AC_MSG_RESULT([fail])
             $7
         ])
-        COUNT=`expr $COUNT - 1`
     ])
 
-    AS_IF([test $COUNT -gt 0 && test ! -z $MICRO],[
-        AC_MSG_CHECKING([version micro=$MICRO])
-        RESULT=`expr match $MICRO '[[0-9]][[0-9A-Za-z]]*'`
-        AS_IF([test $RESULT -gt 0],[
+    AS_IF([test $1 -ge 3 && test ! -z $4],[
+        AC_MSG_CHECKING([version micro=$4])
+        AS_IF([test ! -z `echo $4 | sed -n '/[[0-9]][[0-9A-Za-z]]*/p;'`],[
             AC_MSG_RESULT([success])
             $6],[
             AC_MSG_RESULT([fail])
             $7
         ])
-        COUNT=`expr $COUNT - 1`
     ])
 
-    AS_IF([test $COUNT -gt 0 && test ! -z $EXTRA],[
-        AC_MSG_CHECKING([version extra=$EXTRA])
-        RESULT=`expr match $EXTRA '.*'`
-        AS_IF([test $RESULT -gt 0],[
+    AS_IF([test $1 -ge 4 && test ! -z $5],[
+        AC_MSG_CHECKING([version extra=$5])
+        AS_IF([test ! -z `echo $5 | sed -n '/.*/p;'`],[
             AC_MSG_RESULT([success])
             $6],[
             AC_MSG_RESULT([fail])
             $7
         ])
-        COUNT=`expr $COUNT - 1`
     ])
 ])
