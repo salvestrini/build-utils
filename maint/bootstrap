@@ -240,7 +240,7 @@ done
 #
 # autoreconf
 #
-log "Running autoreconf (autoreconf extra flags $AUTORECONF_FLAGS)..."
+log "Running autoreconf (autoreconf extra flags \`$AUTORECONF_FLAGS')..."
 $AUTORECONF \
     --force \
     --install \
