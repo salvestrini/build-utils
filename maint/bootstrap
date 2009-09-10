@@ -192,7 +192,6 @@ rm -rf `find ./ -name ".deps"`                       || exit 1
 #
 GNULIBTOOL_AUXDIR=./tools/maint
 GNULIBTOOL_FLAGS="
-        --lgpl
         --no-changelog
         --macro-prefix GNULIB
         --no-vc-files
