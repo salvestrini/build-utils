@@ -1,6 +1,7 @@
 all:
 
 clean:
+	rm -f `find ./ -name "*~"`
 
 install:
 
