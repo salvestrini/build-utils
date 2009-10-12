@@ -1,0 +1,228 @@
+#
+# flhandler
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+# Required variables
+PROGNAME="flhandler"
+PROGVERSION="0.0.1"
+
+# System tools
+SED="@SED@"
+
+# Script variables
+FATAL=0
+INFILES=""
+INCLUDE=""
+EXTENSIONS=""
+SEPARATOR=""
+
+#
+# Internal functions
+#
+help () {
+    echo "Usage: $PROGNAME <OPTIONS> -- <FILES>"
+    echo
+    echo "Handles extensions from a files list"
+    echo
+    echo "  -i <ARG>    includes file extension"
+    echo "  -e <ARG>    excludes file extension"
+    echo "  -s <ARG>    specify separator string [default is \" \"]"
+    echo "  -f          all warnings become fatal"
+    echo "  -v          enable verbose output"
+    echo "  -d          enable debugging"
+    echo "  -h          display this help and exit"
+    echo "  -V          display program version"
+    echo
+    echo "Place input files list at last, using -- as separator"
+    echo
+    echo "Report bugs to <@PACKAGE_BUGREPORT@>."
+}
+
+#
+# Libraries initialization
+#
+lib_init
+
+#
+# Parsing command line arguments
+#
+if test x"$*" = x"" ; then
+    hint "Missing required options"
+    exit 1
+fi
+
+while test ! x"$1" = x""
+do
+    case $1 in
+	-i|-e)
+	    TMP=0
+
+	    if test x"$1" = x"-i"; then
+		TMP=1
+	    fi
+
+	    if test ! x"$INCLUDE" = x""; then
+		test x"$INCLUDE" = x"$TMP" ||                          \
+		    { hint "Include and exclude switches cannot coexist!" ; \
+		      exit 1 ; }
+	    else
+		INCLUDE=$TMP
+	    fi
+
+	    shift
+
+	    debug "Adding extension \`${1}' to list"
+
+	    if test x"$EXTENSIONS" = x""; then
+		EXTENSIONS="$1"
+	    else
+		EXTENSIONS="${EXTENSIONS}|$1"
+	    fi
+	    ;;
+	-s)
+	    shift && SEPARATOR="${1}"
+	    ;;
+	-f)
+	    FATAL=1
+	    ;;
+	-v)
+	    VERBOSE=1
+	    ;;
+	-d)
+	    DEBUG=1
+	    ;;
+	-h)
+	    help && exit 0
+	    ;;
+	-V)
+	    version && exit 0
+	    ;;
+	--)
+	    shift
+
+	    while test ! x"$1" = x""
+	    do
+		FILENAME="$1"
+
+		debug "Adding file \`${FILENAME}' to list"
+
+		if test x"$INFILES" = x"" ; then
+		    INFILES=$FILENAME
+		else
+		    INFILES="${INFILES}|${FILENAME}"
+		fi
+		shift
+	    done
+	    break
+	    ;;
+	*)
+	    hint "Wrong option \`$1'"
+	    exit 1
+	    ;;
+    esac
+    shift
+done
+
+debug "extensions  = `echo ${EXTENSIONS} | $SED -e 's/|/,\ /g'`"
+debug "input files = `echo ${INFILES} | $SED -e 's/|/,\ /g'`"
+
+#
+# Checking command line arguments
+#
+if test x"$INCLUDE" = x""; then
+    hint "No include or exclude switches specified"
+    exit 1
+fi
+
+if test x"$SEPARATOR" = x""; then
+    debug "Setting default separator to ' '"
+    SEPARATOR=" "
+fi
+
+if test x"$INFILES" = x""; then
+    hint "Missing input file(s)"
+    exit 1
+fi
+
+#
+# Start the real job
+#
+verbose "PASS 1: Processing files list... "
+
+OLDIFS="${IFS}"
+IFS="|"
+OUT_LIST=""
+
+for FILE in $INFILES
+do
+    debug "Checking file \`${FILE}'"
+
+    ADD_FILE=""
+
+    for EXTENSION in $EXTENSIONS
+    do
+	debug "Checking for extension \`$EXTENSION'"
+
+	MATCH=`echo $FILE | $SED -e 's/^.*\.'$EXTENSION'$/1/; Ta; q;' \
+				 -e ':a { s/^.*$/0/; q; }'`
+
+	if test x"$INCLUDE" = x"$MATCH"; then
+	    ADD_FILE="${FILE}"
+
+	    if test x"$INCLUDE" = x"1"; then
+		break
+	    fi
+	else
+	    ADD_FILE=""
+
+	    if test x"$INCLUDE" = x"0"; then
+		debug "Excluding file \`${FILE}' from list"
+		break
+	    fi
+	fi
+    done
+
+    if test ! x"$ADD_FILE" = x""; then
+	debug "Including file \`${FILE}' to list"
+
+	if test x"$OUT_LIST" = x""; then
+	    OUT_LIST="${FILE}"
+	else
+	    OUT_LIST="${OUT_LIST}${SEPARATOR}${ADD_FILE}"
+	fi
+    fi
+done
+
+verbose "PASS 2: Print the result... "
+if test ! x"$OUT_LIST" = x""; then
+    echo $OUT_LIST
+else
+    verbose "No file(s) match(es)..."
+fi
+
+#
+# Libraries finalization
+#
+lib_fini
+
+#
+# All done!
+#
+exit 0
