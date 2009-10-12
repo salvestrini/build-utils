@@ -1,1 +1,7 @@
-<root>Nameless dnt database</root>
+<?xml version="1.0" ?>
+<root>
+	Nameless dnt database
+	<entry priority="veryhigh" start="1255386120">
+		Add file inclusion/exclusion based on suffix (.h, .h++, .hpp and so on) in maint/guards-check.in script
+	</entry>
+</root>
