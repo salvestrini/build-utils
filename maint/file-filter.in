@@ -1,5 +1,8 @@
+#! @SHELL@
+# -*- sh -*-
+
 #
-# flhandler
+# file-filter
 #
 # Copyright (C) 2008, 2009 Francesco Salvestrini
 #                          Alessandro Massignan
@@ -20,7 +23,7 @@
 #
 
 # Required variables
-PROGNAME="flhandler"
+PROGNAME="file-filter"
 PROGVERSION="0.0.1"
 
 # System tools
@@ -39,7 +42,7 @@ SEPARATOR=""
 help () {
     echo "Usage: $PROGNAME <OPTIONS> -- <FILES>"
     echo
-    echo "Handles extensions from a files list"
+    echo "Handles filename filtering based on extensions"
     echo
     echo "  -i <ARG>    includes file extension"
     echo "  -e <ARG>    excludes file extension"
