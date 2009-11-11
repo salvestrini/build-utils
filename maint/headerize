@@ -1,0 +1,139 @@
+#!/bin/sh
+# -*- sh -*-
+
+#
+# headerize
+#
+# Copyright (C) 2008, 2009 Francesco Salvestrini
+#                          Alessandro Massignan
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+# Required variables
+PROGRAM_NAME="headerize"
+PROGRAM_VERSION="0.0.1"
+PROGRAM_BUGREPORT="salvestrini@gmail.com"
+
+INFILES=""
+HEADER=""
+
+#
+# Internal functions
+#
+help () {
+    echo "Usage: $PROGRAM_NAME <OPTIONS> -- <FILES>"
+    echo ""
+    echo "Headerize input files (inplace)"
+    echo ""
+    echo "  -H <ARG>    header file to use"
+    echo "  -h          display this help and exit"
+    echo "  -V          display program version"
+    echo
+    echo "Place input files list at last, using -- as separator"
+    echo
+    echo "Report bugs to <${PROGRAM_BUGREPORT}>."
+}
+
+version () {
+    echo "${PROGRAM_NAME} ${PROGRAM_VERSION}"
+    echo ""
+    echo "Copyright (C) 2008, 2009 Francesco Salvestrini"
+    echo ""
+echo "This is free software.  You may redistribute copies of it under the terms of"
+echo "the GNU General Public License <http://www.gnu.org/licenses/gpl.html>."
+echo "There is NO WARRANTY, to the extent permitted by law."
+}
+
+hint () {
+    echo "${PROGRAM_NAME}: $1"
+    echo "Try \`${PROGRAM_NAME} -h' for more information."
+}
+
+error () {
+    echo "${PROGRAM_NAME}: $1"
+}
+
+#
+# Parsing command line arguments
+#
+if test x"$*" = x"" ; then
+    hint "Missing required options"
+    exit 1
+fi
+
+while test ! x"$1" = x""
+do
+    case $1 in
+	-H)
+	    shift && HEADER="${1}"
+	    ;;
+	-h)
+	    help && exit 0
+	    ;;
+	-V)
+	    version && exit 0
+	    ;;
+	--)
+	    shift
+
+	    while test ! x"$1" = x""
+	    do
+		FILENAME="$1"
+
+		if test x"$INFILES" = x"" ; then
+		    INFILES=$FILENAME
+		else
+		    INFILES="${INFILES} ${FILENAME}"
+		fi
+		shift
+	    done
+	    break
+	    ;;
+	*)
+	    hint "Wrong option \`$1'"
+	    exit 1
+	    ;;
+    esac
+    shift
+done
+
+#
+# Checking command line arguments
+#
+if test x"$HEADER" = x""; then
+    hint "Missing header file"
+    exit 1
+fi
+
+if test x"$INFILES" = x""; then
+    hint "Missing input file(s)"
+fi
+
+#
+# Start the real job
+#
+for i in ${INFILES} ;
+do
+    cat $HEADER > $i.tmp && cat $i >> $i.tmp && mv $i.tmp $i|| {
+        error "Cannot headerize $i"
+        exit 1
+    }
+done
+
+#
+# All done!
+#
+exit 0
