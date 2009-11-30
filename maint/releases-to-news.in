@@ -25,9 +25,8 @@
 me="releases-to-news"
 version="0.1"
 
-SED="sed"
-SORT="sort"
-DNT="dnt"
+SED="@SED@"
+SORT="@SORT@"
 INPUT=""
 OUTPUT=""
 
@@ -55,7 +54,8 @@ do
             ;;
         -v|--version)
             echo "${me} (@PACKAGE_NAME@) ${version}"
-            echo "Written by Francesco Salvestrini."
+            echo "Written by Francesco Salvestrini"
+            echo "           Alessandro Massignan"
             echo ""
             echo "This is free software; see the source for copying" \
                 "conditions. There is NO"
@@ -129,20 +129,21 @@ do
     fi
 
     FILTER="end>\"${SD} ${ST}\" and end<=\"${ED} ${ET}\" and done"
-    ${DNT} --mono --database=.dnt.db              \
-           show                                   \
-           --filter="${FILTER}"                   \
-           --line-format="* %t"                   \
-           --level-fill=""                        \
-           --indent-fill=""                       \
-           --unindent-fill=""                     \
-           --wrap-fill="  "                       \
-           --width=78                             \
-           --hide-collapsed >$TEMP ||             \
-        {                                         \
-          echo "Failed to retrieve info from DB"; \
-          rm -f $TEMP 2>/dev/null;                \
-          exit 1;                                 \
+    ${DNT_BIN}                                          \
+        --database=${DNT_DB}                            \
+        --mono                                          \
+        show                                            \
+        --filter="${FILTER}"                            \
+        --line-format="* %t"                            \
+        --level-fill=""                                 \
+        --indent-fill=""                                \
+        --unindent-fill=""                              \
+        --wrap-fill="  "                                \
+        --width=78                                      \
+        --hide-collapsed >$TEMP || {                    \
+          echo "Failed to retrieve info from DB";       \
+          rm -f $TEMP 2>/dev/null;                      \
+          exit 1;                                       \
         }
 
     if test "x`${SED} '$=' <${TEMP}`" = "x"; then
