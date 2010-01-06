@@ -4,4 +4,10 @@
 	<entry end="1255387686" priority="veryhigh" start="1255386120">
 		Add file inclusion/exclusion based on suffix (.h, .h++, .hpp and so on) in maint/guards-check.in script
 	</entry>
+	<entry priority="veryhigh" start="1262805153">
+		whitespace-detect erroneusly detects whites on C/C++ macros
+	</entry>
+	<entry priority="veryhigh" start="1262805208">
+		guards-check reports (-r) no-filename for defines like __cplusplus
+	</entry>
 </root>
